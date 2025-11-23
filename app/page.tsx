@@ -1,7 +1,8 @@
 import ClientOnly from "@/components/ClientOnly";
 import Container from "@/components/Container";
 import EmptyState from "@/components/EmptyState";
-import ListingCard from "@/components/listing/ListingCard";
+import HorizontalListingSection from "@/components/listing/HorizontalListingSection";
+import { groupListingsByLocation } from "@/lib/listingHelpers";
 import getCurrentUser from "./actions/getCurrentUser";
 import getListings, { IListingsParams } from "./actions/getListings";
 
@@ -21,19 +22,22 @@ export default async function Home({ searchParams }: HomeProps) {
     );
   }
 
+  // Group listings by location for horizontal sections
+  const groupedByLocation = groupListingsByLocation(listing, 3);
+
   return (
     <ClientOnly>
       <Container>
-        <div className="pt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-8 overflow-x-hidden">
-          {listing.map((list) => {
-            return (
-              <ListingCard
-                key={list.id}
-                data={list}
-                currentUser={currentUser}
-              />
-            );
-          })}
+        <div className="pt-24">
+          {groupedByLocation.map((group) => (
+            <HorizontalListingSection
+              key={group.location}
+              title={`Popular homes in ${group.locationLabel}`}
+              listings={group.listings}
+              currentUser={currentUser}
+              showGuestFavorite={true}
+            />
+          ))}
         </div>
       </Container>
     </ClientOnly>

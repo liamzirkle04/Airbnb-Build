@@ -18,6 +18,7 @@ type Props = {
   actionLabel?: string;
   actionId?: string;
   currentUser?: SafeUser | null;
+  showGuestFavorite?: boolean;
 };
 
 function ListingCard({
@@ -28,6 +29,7 @@ function ListingCard({
   actionLabel,
   actionId = "",
   currentUser,
+  showGuestFavorite = false,
 }: Props) {
   const router = useRouter();
   const { getByValue } = useCountries();
@@ -84,6 +86,13 @@ function ListingCard({
             src={data.imageSrc}
             alt="listing"
           />
+          {showGuestFavorite && (
+            <div className="absolute top-3 left-3">
+              <div className="bg-white px-3 py-1 rounded-full shadow-md">
+                <span className="text-sm font-semibold">Guest favorite</span>
+              </div>
+            </div>
+          )}
           <div className="absolute top-3 right-3">
             <HeartButton listingId={data.id} currentUser={currentUser} />
           </div>
